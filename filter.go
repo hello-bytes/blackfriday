@@ -5,46 +5,22 @@ import (
 	"log"
 )
 
+const IMAGEITEM int8 = 1
+
+//MakedownItem markdown的元素
+type MakedownItem struct {
+	ItemType int8
+	Data     interface{}
+}
+
+//ImageItem markdown的图片
+type ImageItem struct {
+	Title string
+	URL   string
+}
+
 type Filter struct {
-	// block-level callbacks
-	/*BlockCode(out *bytes.Buffer, text []byte, infoString string)
-	BlockQuote(out *bytes.Buffer, text []byte)
-	BlockHtml(out *bytes.Buffer, text []byte)
-	Header(out *bytes.Buffer, text func() bool, level int, id string)
-	HRule(out *bytes.Buffer)
-	List(out *bytes.Buffer, text func() bool, flags int)
-	ListItem(out *bytes.Buffer, text []byte, flags int)
-	Paragraph(out *bytes.Buffer, text func() bool)
-	Table(out *bytes.Buffer, header []byte, body []byte, columnData []int)
-	TableRow(out *bytes.Buffer, text []byte)
-	TableHeaderCell(out *bytes.Buffer, text []byte, flags int)
-	TableCell(out *bytes.Buffer, text []byte, flags int)
-	Footnotes(out *bytes.Buffer, text func() bool)
-	FootnoteItem(out *bytes.Buffer, name, text []byte, flags int)
-	TitleBlock(out *bytes.Buffer, text []byte)
-
-	// Span-level callbacks
-	AutoLink(out *bytes.Buffer, link []byte, kind int)
-	CodeSpan(out *bytes.Buffer, text []byte)
-	DoubleEmphasis(out *bytes.Buffer, text []byte)
-	Emphasis(out *bytes.Buffer, text []byte)
-	Image(out *bytes.Buffer, link []byte, title []byte, alt []byte)
-	LineBreak(out *bytes.Buffer)
-	Link(out *bytes.Buffer, link []byte, title []byte, content []byte)
-	RawHtmlTag(out *bytes.Buffer, tag []byte)
-	TripleEmphasis(out *bytes.Buffer, text []byte)
-	StrikeThrough(out *bytes.Buffer, text []byte)
-	FootnoteRef(out *bytes.Buffer, ref []byte, id int)
-
-	// Low-level callbacks
-	Entity(out *bytes.Buffer, entity []byte)
-	NormalText(out *bytes.Buffer, text []byte)
-
-	// Header and footer
-	DocumentHeader(out *bytes.Buffer)
-	DocumentFooter(out *bytes.Buffer)
-
-	GetFlags() int*/
+	items []MakedownItem
 }
 
 func FilterRenderer() Renderer {
@@ -53,88 +29,100 @@ func FilterRenderer() Renderer {
 }
 
 func (options *Filter) BlockCode(out *bytes.Buffer, text []byte, infoString string) {
-
+	log.Println("BlockCode ")
 }
 
 func (options *Filter) BlockQuote(out *bytes.Buffer, text []byte) {
-
+	log.Println("BlockQuote ")
 }
 func (options *Filter) BlockHtml(out *bytes.Buffer, text []byte) {
-
+	log.Println("BlockHtml ")
 }
 func (options *Filter) Header(out *bytes.Buffer, text func() bool, level int, id string) {
-
+	log.Println("Header ")
+	text()
 }
 func (options *Filter) HRule(out *bytes.Buffer) {
-
+	log.Println("HRule ")
 }
 func (options *Filter) List(out *bytes.Buffer, text func() bool, flags int) {
-
+	log.Println("List ")
+	text()
 }
 func (options *Filter) ListItem(out *bytes.Buffer, text []byte, flags int) {
-
+	log.Println("ListItem ")
 }
 func (options *Filter) Paragraph(out *bytes.Buffer, text func() bool) {
-
+	log.Println("Paragraph ")
+	text()
 }
 func (options *Filter) Table(out *bytes.Buffer, header []byte, body []byte, columnData []int) {
-
+	log.Println("Table ")
 }
 func (options *Filter) TableRow(out *bytes.Buffer, text []byte) {
-
+	log.Println("TableRow ")
 }
 func (options *Filter) TableHeaderCell(out *bytes.Buffer, text []byte, flags int) {
-
+	log.Println("TableHeaderCell ")
 }
 func (options *Filter) TableCell(out *bytes.Buffer, text []byte, flags int) {
-
+	log.Println("TableCell ")
 }
 func (options *Filter) Footnotes(out *bytes.Buffer, text func() bool) {
-
+	log.Println("Footnotes ")
 }
 func (options *Filter) FootnoteItem(out *bytes.Buffer, name, text []byte, flags int) {
-
+	log.Println("FootnoteItem ")
 }
 func (options *Filter) TitleBlock(out *bytes.Buffer, text []byte) {
-
+	log.Println("TitleBlock ")
 }
 
 func (options *Filter) AutoLink(out *bytes.Buffer, link []byte, kind int) {
-
+	log.Println("AutoLink ")
 }
 func (options *Filter) CodeSpan(out *bytes.Buffer, text []byte) {
-
+	log.Println("CodeSpan ")
 }
 func (options *Filter) DoubleEmphasis(out *bytes.Buffer, text []byte) {
-
+	log.Println("DoubleEmphasis ")
 }
 func (options *Filter) Emphasis(out *bytes.Buffer, text []byte) {
-
+	log.Println("Emphasis ")
 }
 func (options *Filter) Image(out *bytes.Buffer, link []byte, title []byte, alt []byte) {
-	log.Println(string(link))
+	log.Println("Image : ", string(link))
+
+	var item MakedownItem
+	item.ItemType = IMAGEITEM
+
+	var imageItem ImageItem
+	imageItem.Title = string(title)
+	imageItem.URL = string(link)
+	item.Data = &imageItem
+	options.items = append(options.items, item)
 }
 func (options *Filter) LineBreak(out *bytes.Buffer) {
-
+	log.Println("NormalText ")
 }
 func (options *Filter) Link(out *bytes.Buffer, link []byte, title []byte, content []byte) {
-
+	log.Println("Link ")
 }
 func (options *Filter) RawHtmlTag(out *bytes.Buffer, tag []byte) {
-
+	log.Println("RawHtmlTag ")
 }
 func (options *Filter) TripleEmphasis(out *bytes.Buffer, text []byte) {
-
+	log.Println("TripleEmphasis ")
 }
 func (options *Filter) StrikeThrough(out *bytes.Buffer, text []byte) {
-
+	log.Println("StrikeThrough ")
 }
 func (options *Filter) FootnoteRef(out *bytes.Buffer, ref []byte, id int) {
-
+	log.Println("FootnoteRef ")
 }
 
 func (options *Filter) Entity(out *bytes.Buffer, entity []byte) {
-
+	log.Println("Entity ")
 }
 func (options *Filter) NormalText(out *bytes.Buffer, text []byte) {
 	log.Println("NormalText ", string(text))
@@ -164,4 +152,12 @@ func (options *Filter) GetFlags() int {
 		EXTENSION_HEADER_IDS |
 		EXTENSION_BACKSLASH_LINE_BREAK |
 		EXTENSION_DEFINITION_LISTS
+}
+
+func AnalyzeMarkdown(text string) ([]MakedownItem, error) {
+	var filterObj Filter
+	//renderer := FilterRenderer()
+	MarkdownOptions([]byte(text), &filterObj, Options{
+		Extensions: commonExtensions})
+	return filterObj.items, nil
 }
