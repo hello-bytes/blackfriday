@@ -2,7 +2,6 @@ package blackfriday
 
 import (
 	"bytes"
-	"log"
 )
 
 const IMAGEITEM int8 = 1
@@ -24,74 +23,73 @@ type Filter struct {
 }
 
 func FilterRenderer() Renderer {
-	log.Println("sdf")
 	return &Filter{}
 }
 
 func (options *Filter) BlockCode(out *bytes.Buffer, text []byte, infoString string) {
-	log.Println("BlockCode ")
+	// log.Println("BlockCode ")
 }
 
 func (options *Filter) BlockQuote(out *bytes.Buffer, text []byte) {
-	log.Println("BlockQuote ")
+	// log.Println("BlockQuote ")
 }
 func (options *Filter) BlockHtml(out *bytes.Buffer, text []byte) {
-	log.Println("BlockHtml ")
+	// log.Println("BlockHtml ")
 }
 func (options *Filter) Header(out *bytes.Buffer, text func() bool, level int, id string) {
-	log.Println("Header ")
+	// log.Println("Header ")
 	text()
 }
 func (options *Filter) HRule(out *bytes.Buffer) {
-	log.Println("HRule ")
+	// log.Println("HRule ")
 }
 func (options *Filter) List(out *bytes.Buffer, text func() bool, flags int) {
-	log.Println("List ")
+	// log.Println("List ")
 	text()
 }
 func (options *Filter) ListItem(out *bytes.Buffer, text []byte, flags int) {
-	log.Println("ListItem ")
+	// log.Println("ListItem ")
 }
 func (options *Filter) Paragraph(out *bytes.Buffer, text func() bool) {
-	log.Println("Paragraph ")
+	// log.Println("Paragraph ")
 	text()
 }
 func (options *Filter) Table(out *bytes.Buffer, header []byte, body []byte, columnData []int) {
-	log.Println("Table ")
+	// log.Println("Table ")
 }
 func (options *Filter) TableRow(out *bytes.Buffer, text []byte) {
-	log.Println("TableRow ")
+	// log.Println("TableRow ")
 }
 func (options *Filter) TableHeaderCell(out *bytes.Buffer, text []byte, flags int) {
-	log.Println("TableHeaderCell ")
+	// log.Println("TableHeaderCell ")
 }
 func (options *Filter) TableCell(out *bytes.Buffer, text []byte, flags int) {
-	log.Println("TableCell ")
+	// log.Println("TableCell ")
 }
 func (options *Filter) Footnotes(out *bytes.Buffer, text func() bool) {
-	log.Println("Footnotes ")
+	// log.Println("Footnotes ")
 }
 func (options *Filter) FootnoteItem(out *bytes.Buffer, name, text []byte, flags int) {
-	log.Println("FootnoteItem ")
+	// log.Println("FootnoteItem ")
 }
 func (options *Filter) TitleBlock(out *bytes.Buffer, text []byte) {
-	log.Println("TitleBlock ")
+	// log.Println("TitleBlock ")
 }
 
 func (options *Filter) AutoLink(out *bytes.Buffer, link []byte, kind int) {
-	log.Println("AutoLink ")
+	// log.Println("AutoLink ")
 }
 func (options *Filter) CodeSpan(out *bytes.Buffer, text []byte) {
-	log.Println("CodeSpan ")
+	// log.Println("CodeSpan ")
 }
 func (options *Filter) DoubleEmphasis(out *bytes.Buffer, text []byte) {
-	log.Println("DoubleEmphasis ")
+	// log.Println("DoubleEmphasis ")
 }
 func (options *Filter) Emphasis(out *bytes.Buffer, text []byte) {
-	log.Println("Emphasis ")
+	// log.Println("Emphasis ")
 }
 func (options *Filter) Image(out *bytes.Buffer, link []byte, title []byte, alt []byte) {
-	log.Println("Image : ", string(link))
+	// log.Println("Image : ", string(link))
 
 	var item MakedownItem
 	item.ItemType = IMAGEITEM
@@ -103,40 +101,39 @@ func (options *Filter) Image(out *bytes.Buffer, link []byte, title []byte, alt [
 	options.items = append(options.items, item)
 }
 func (options *Filter) LineBreak(out *bytes.Buffer) {
-	log.Println("NormalText ")
+	// log.Println("NormalText ")
 }
 func (options *Filter) Link(out *bytes.Buffer, link []byte, title []byte, content []byte) {
-	log.Println("Link ")
+	// log.Println("Link ")
 }
 func (options *Filter) RawHtmlTag(out *bytes.Buffer, tag []byte) {
-	log.Println("RawHtmlTag ")
+	// log.Println("RawHtmlTag ")
 }
 func (options *Filter) TripleEmphasis(out *bytes.Buffer, text []byte) {
-	log.Println("TripleEmphasis ")
+	// log.Println("TripleEmphasis ")
 }
 func (options *Filter) StrikeThrough(out *bytes.Buffer, text []byte) {
-	log.Println("StrikeThrough ")
+	// log.Println("StrikeThrough ")
 }
 func (options *Filter) FootnoteRef(out *bytes.Buffer, ref []byte, id int) {
-	log.Println("FootnoteRef ")
+	// log.Println("FootnoteRef ")
 }
 
 func (options *Filter) Entity(out *bytes.Buffer, entity []byte) {
-	log.Println("Entity ")
+	// log.Println("Entity ")
 }
 func (options *Filter) NormalText(out *bytes.Buffer, text []byte) {
-	log.Println("NormalText ", string(text))
+	// log.Println("NormalText ", string(text))
 }
 
 func (options *Filter) DocumentHeader(out *bytes.Buffer) {
-	log.Println("document header")
+	// log.Println("document header")
 }
 func (options *Filter) DocumentFooter(out *bytes.Buffer) {
-	log.Println("DocumentFooter")
+	// log.Println("DocumentFooter")
 }
 
 func (options *Filter) GetFlags() int {
-	log.Println("get flats")
 	return 0 |
 		HTML_USE_XHTML |
 		HTML_USE_SMARTYPANTS |
