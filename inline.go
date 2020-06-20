@@ -204,6 +204,7 @@ func isReferenceStyleLink(data []byte, pos int, t linkType) bool {
 
 // '[': parse a link or an image or a footnote
 func link(p *parser, out *bytes.Buffer, data []byte, offset int) int {
+
 	// no links allowed inside regular links, footnote, and deferred footnotes
 	if p.insideLink && (offset > 0 && data[offset-1] == '[' || len(data)-1 > offset && data[offset+1] == '^') {
 		return 0
@@ -530,6 +531,8 @@ func link(p *parser, out *bytes.Buffer, data []byte, offset int) int {
 		}
 	}
 
+	//log.Println("check link:", string(link), string(content.Bytes()))
+
 	var uLink []byte
 	if t == linkNormal || t == linkImg {
 		if len(link) > 0 {
@@ -538,11 +541,15 @@ func link(p *parser, out *bytes.Buffer, data []byte, offset int) int {
 			uLink = uLinkBuf.Bytes()
 		}
 
+		//log.Println("check link:", string(link), " -> ", string(uLink), " content : ", string(content.Bytes()))
+
 		// links need something to click on and somewhere to go
 		if len(uLink) == 0 || (t == linkNormal && content.Len() == 0) {
 			return 0
 		}
 	}
+
+	//log.Println("start call p.r.Link...", string(uLink), string(title))
 
 	// call the relevant rendering function
 	switch t {

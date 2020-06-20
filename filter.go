@@ -2,9 +2,13 @@ package blackfriday
 
 import (
 	"bytes"
+	"log"
 )
 
 const IMAGEITEM int8 = 1
+const HTMLITEM int8 = 2
+const URLITEM int8 = 3
+const URLAUTOITEM int8 = 4
 
 //MakedownItem markdown的元素
 type MakedownItem struct {
@@ -16,6 +20,15 @@ type MakedownItem struct {
 type ImageItem struct {
 	Title string
 	URL   string
+}
+
+type URLItemData struct {
+	Title string
+	URL   string
+}
+
+type HtmlItem struct {
+	Html string
 }
 
 type Filter struct {
@@ -34,8 +47,19 @@ func (options *Filter) BlockQuote(out *bytes.Buffer, text []byte) {
 	// log.Println("BlockQuote ")
 }
 func (options *Filter) BlockHtml(out *bytes.Buffer, text []byte) {
-	// log.Println("BlockHtml ")
+	log.Println("BlockHtml ")
+
+	var item MakedownItem
+	item.ItemType = HTMLITEM
+
+	var htmlItem HtmlItem
+	htmlItem.Html = string(text)
+	item.Data = &htmlItem
+	options.items = append(options.items, item)
+
+	//log.Println(string(text))
 }
+
 func (options *Filter) Header(out *bytes.Buffer, text func() bool, level int, id string) {
 	// log.Println("Header ")
 	text()
@@ -77,7 +101,16 @@ func (options *Filter) TitleBlock(out *bytes.Buffer, text []byte) {
 }
 
 func (options *Filter) AutoLink(out *bytes.Buffer, link []byte, kind int) {
-	// log.Println("AutoLink ")
+	//log.Println("AutoLink", kind)
+
+	var item MakedownItem
+	item.ItemType = URLAUTOITEM
+
+	var urlItem URLItemData
+	urlItem.URL = string(link)
+	item.Data = &urlItem
+
+	options.items = append(options.items, item)
 }
 func (options *Filter) CodeSpan(out *bytes.Buffer, text []byte) {
 	// log.Println("CodeSpan ")
@@ -96,6 +129,7 @@ func (options *Filter) Image(out *bytes.Buffer, link []byte, title []byte, alt [
 
 	var imageItem ImageItem
 	imageItem.Title = string(title)
+	//imageItem.Title = string(alt)
 	imageItem.URL = string(link)
 	item.Data = &imageItem
 	options.items = append(options.items, item)
@@ -104,7 +138,16 @@ func (options *Filter) LineBreak(out *bytes.Buffer) {
 	// log.Println("NormalText ")
 }
 func (options *Filter) Link(out *bytes.Buffer, link []byte, title []byte, content []byte) {
-	// log.Println("Link ")
+
+	var item MakedownItem
+	item.ItemType = URLITEM
+
+	var urlItem URLItemData
+	urlItem.Title = string(content)
+	urlItem.URL = string(link)
+	item.Data = &urlItem
+
+	options.items = append(options.items, item)
 }
 func (options *Filter) RawHtmlTag(out *bytes.Buffer, tag []byte) {
 	// log.Println("RawHtmlTag ")
@@ -124,7 +167,42 @@ func (options *Filter) Entity(out *bytes.Buffer, entity []byte) {
 }
 func (options *Filter) NormalText(out *bytes.Buffer, text []byte) {
 	// log.Println("NormalText ", string(text))
+	//if options.GetFlags()&HTML_USE_SMARTYPANTS != 0 {
+	//	options.Smartypants(out, text)
+	//} else {
+	attrEscape(out, text)
+	//}
 }
+
+/*
+func (options *Filter) Smartypants(out *bytes.Buffer, text []byte) {
+	smrt := smartypantsData{false, false}
+
+	// first do normal entity escaping
+	var escaped bytes.Buffer
+	attrEscape(&escaped, text)
+	text = escaped.Bytes()
+
+	mark := 0
+	for i := 0; i < len(text); i++ {
+		if action := options.smartypants[text[i]]; action != nil {
+			if i > mark {
+				out.Write(text[mark:i])
+			}
+
+			previousChar := byte(0)
+			if i > 0 {
+				previousChar = text[i-1]
+			}
+			i += action(out, &smrt, previousChar, text[i:])
+			mark = i + 1
+		}
+	}
+
+	if mark < len(text) {
+		out.Write(text[mark:])
+	}
+}*/
 
 func (options *Filter) DocumentHeader(out *bytes.Buffer) {
 	// log.Println("document header")
@@ -143,7 +221,7 @@ func (options *Filter) GetFlags() int {
 		EXTENSION_NO_INTRA_EMPHASIS |
 		EXTENSION_TABLES |
 		EXTENSION_FENCED_CODE |
-		EXTENSION_AUTOLINK |
+
 		EXTENSION_STRIKETHROUGH |
 		EXTENSION_SPACE_HEADERS |
 		EXTENSION_HEADER_IDS |
@@ -151,10 +229,11 @@ func (options *Filter) GetFlags() int {
 		EXTENSION_DEFINITION_LISTS
 }
 
+//EXTENSION_AUTOLINK |
 func AnalyzeMarkdown(text string) ([]MakedownItem, error) {
 	var filterObj Filter
 	//renderer := FilterRenderer()
 	MarkdownOptions([]byte(text), &filterObj, Options{
-		Extensions: commonExtensions})
+		Extensions: commonExtensionsFilter})
 	return filterObj.items, nil
 }
